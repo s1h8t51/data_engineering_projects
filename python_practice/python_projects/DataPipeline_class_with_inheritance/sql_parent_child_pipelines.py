@@ -85,9 +85,63 @@ class MarketingPipeline:
 # --- Child classes (Facebook, Google, etc) remain the same ---
 class FacebookPipeline(MarketingPipeline):
     def extract(self):
-        self.log_status("Reading CSV...")
-        self.raw_data = [{"Campaign_ID": "FB_101", "Spend": 450.00}]
+        self.log_status("Reading CSV from S3 bucket...")
+        # Simulating CSV rows
+        self.raw_data = [
+            {"Campaign_ID": "FB_001", "Spend": 150.00},
+            {"Campaign_ID": "FB_002", "Spend": 200.50}
+        ]
+
+class GooglePipeline(MarketingPipeline):
+    def extract(self):
+        self.log_status("Calling Google Ads API...")
+        # Simulating JSON response
+        self.raw_data = [
+            {"id": "G_99", "cost": 300.25},
+            {"id": "G_88", "cost": 10.00}
+        ]
+
+    def transform(self):
+        # 1. Use inheritance to do the basic cleaning first
+        super().transform() 
+        
+        # 2. Add Google-specific logic: Rename 'id' to 'campaign_id'
+        self.log_status("Renaming Google-specific fields...")
+        for record in self.cleaned_data:
+            if 'id' in record:
+                record['campaign_id'] = record.pop('id')
+
+class TwitterPipeline(MarketingPipeline):
+    def extract(self):
+        self.log_status("enterning twitter data ...")
+        self.raw_data = [
+            {"twitter_id": "T_33", "cost": 300.25},
+            {"twitter_id": "T_88", "cost": 10.00}
+        ]
+    def transform(self):
+        super().transform() 
+        self.log_status("Renaming twitter-specific fields...")
+        for record in self.cleaned_data:
+            if 'twitter_id' in record:
+                record['campaign_id'] = record.pop('twitter_id')
+
 
 if __name__ == "__main__":
-    fb_job = FacebookPipeline("Facebook")
+    print("--- TESTING PIPELINES ---")
+    
+    # 1. Test the Facebook Pipeline
+    fb_job = FacebookPipeline("Facebook_Ads")
     fb_job.run()
+    
+    print("\n" + "="*30 + "\n")
+    
+    # 2. Test the Google Pipeline
+    google_job = GooglePipeline("Google_Ads")
+    google_job.run()
+
+    twitter_job = TwitterPipeline("Twitter_comments")
+    twitter_job.run()
+
+
+## to see the data from sqllite3 -- sqlite3 marketing_data.db "SELECT * FROM ads_data;"
+## postgresql psql -h localhost -U your_username -d marketing_db -c "SELECT * FROM ads_data;"
