@@ -1,0 +1,652 @@
+🎯 30-DAY SYSTEM DESIGN MASTERY PLAN (4 HOURS/DAY)
+
+📚 COMPLETE LEARNING ROADMAP FOR INTERVIEWS
+
+Your goal: Master system design for Data Engineer/Software Engineer interviews Time commitment: 
+4 hours/day × 30 days = 120 hours total Target: Ready for FAANG-level system design interviews
+
+
+📖 BEST FREE RESOURCES
+
+PRIMARY RESOURCES (Use these):
+
+1. System Design Primer (GitHub) ⭐⭐⭐
+
+Link: https://github.com/donnemartin/system-design-primer
+Why: Most comprehensive free resource
+What: Architecture patterns, scalability, trade-offs
+Time: Use throughout all 30 days
+2. ByteByteGo (YouTube) ⭐⭐⭐
+
+Channel: ByteByteGo / Alex Xu
+Why: Visual explanations, real-world systems
+What: How Netflix, Uber, Twitter scale
+Time: 2-3 videos per day
+3. Gaurav Sen (YouTube) ⭐⭐⭐
+
+Channel: Gaurav Sen
+Why: Indian engineer, great teaching style
+What: System design concepts, examples
+Time: 1-2 videos per day
+4. InterviewReady (YouTube) ⭐⭐
+
+Channel: InterviewReady
+Why: Mock interviews, real examples
+What: How to approach system design interviews
+Time: Week 3-4
+5. Exponent (YouTube) ⭐⭐
+
+Channel: Exponent
+Why: Interview walkthroughs
+What: How to structure answers
+Time: Week 3-4
+
+🗓️ 30-DAY SCHEDULE (4 HOURS/DAY)
+
+WEEK 1 (DAYS 1-7): FOUNDATIONS
+
+Goal: Understand fundamental concepts
+
+
+DAY 1: Introduction & Scalability Basics
+
+Hour 1-2: Read System Design Primer
+
+[ ] Introduction section
+[ ] Scalability concepts
+[ ] Performance vs. scalability
+[ ] Latency vs. throughput
+Hour 3: Watch ByteByteGo
+
+[ ] "What is System Design?" (10 min)
+[ ] "Scalability for Dummies" (15 min)
+[ ] "Load Balancing Explained" (12 min)
+Hour 4: Practice
+
+[ ] Draw a simple web application architecture
+[ ] Identify components: client, server, database
+[ ] Where would you add load balancer?
+
+DAY 2: Load Balancing & Caching
+
+Hour 1-2: Read System Design Primer
+
+[ ] Load balancing section
+[ ] Horizontal vs. vertical scaling
+[ ] Caching strategies
+[ ] CDN concepts
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "How Caching Works" (12 min)
+[ ] Gaurav Sen: "Consistent Hashing" (20 min)
+[ ] ByteByteGo: "CDN Explained" (10 min)
+Hour 4: Practice
+
+[ ] Design a system with cache layer
+[ ] When to use cache vs. database?
+[ ] Cache invalidation strategies
+
+DAY 3: Databases - SQL vs NoSQL
+
+Hour 1-2: Read System Design Primer
+
+[ ] Database section
+[ ] RDBMS concepts (ACID)
+[ ] NoSQL types (document, key-value, wide-column, graph)
+[ ] When to use each
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "SQL vs NoSQL" (15 min)
+[ ] Gaurav Sen: "Database Sharding" (25 min)
+Hour 4: Practice
+
+[ ] Design data model for Twitter
+[ ] Which database for user profiles? (SQL)
+[ ] Which database for tweets? (NoSQL)
+[ ] Why?
+
+DAY 4: Database Scaling - Replication & Sharding
+
+Hour 1-2: Read System Design Primer
+
+[ ] Replication (master-slave, master-master)
+[ ] Sharding strategies
+[ ] Federation
+[ ] Denormalization
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "Database Replication" (12 min)
+[ ] Gaurav Sen: "Partitioning Databases" (20 min)
+[ ] ByteByteGo: "How to Scale Databases" (15 min)
+Hour 4: Practice
+
+[ ] Design Instagram database
+[ ] How to shard user data?
+[ ] How to handle user photos? ﻿ ﻿
+Architect Tip: In Fintech, we often use "Read-your-own-writes" consistency where we force a read to the Master only for the first 5 seconds after a transaction.
+The Missing Piece: To answer the "How to make it sub-100ms" part specifically: You would create a Materialized Viewor a Summary Table. Instead of joining 5 tables, you store a pre-calculated total_portfolio_value column in the Users table
+
+DAY 5: Asynchronous Processing & Message Queues
+
+Hour 1-2: Read System Design Primer
+
+[ ] Asynchronism section
+[ ] Message queues (RabbitMQ, Kafka)
+[ ] Task queues
+[ ] Back pressure
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "Message Queues Explained" (12 min)
+[ ] Gaurav Sen: "Kafka in 5 minutes" (6 min)
+[ ] ByteByteGo: "Event-Driven Architecture" (15 min)
+Hour 4: Practice
+
+[ ] Design notification system
+[ ] Where would you use message queue?
+[ ] How to handle failures?
+
+DAY 6: CAP Theorem & Consistency Models
+
+Hour 1-2: Read System Design Primer
+
+[ ] CAP theorem
+[ ] Consistency patterns (weak, eventual, strong)
+[ ] Availability patterns (fail-over, replication)
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "CAP Theorem Simply Explained" (10 min)
+[ ] Gaurav Sen: "Distributed Systems" (30 min)
+Hour 4: Practice
+
+[ ] Banking system: CP or AP? (CP - consistency critical)
+[ ] Social media feed: CP or AP? (AP - availability matters)
+[ ] Justify your choices
+
+DAY 7: Week 1 Review & Practice
+
+Hour 1-2: Review all notes
+
+[ ] Go through your practice designs
+[ ] Identify gaps in understanding
+[ ] Re-watch unclear videos
+Hour 3-4: Mock Design #1
+
+[ ] Design URL Shortener (like bit.ly)
+[ ] Requirements: shorten URLs, redirect, analytics
+[ ] Components: API, database, cache
+[ ] Scale: 1 billion URLs
+[ ] Time yourself: 45 minutes
+
+WEEK 2 (DAYS 8-14): CORE SYSTEM COMPONENTS
+
+Goal: Deep dive into essential system components
+
+
+DAY 8: API Design & REST
+
+Hour 1-2: Read System Design Primer
+
+[ ] API design best practices
+[ ] REST principles
+[ ] GraphQL vs REST
+[ ] Rate limiting
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "API Design Best Practices" (15 min)
+[ ] Gaurav Sen: "Rate Limiting" (20 min)
+Hour 4: Practice
+
+[ ] Design Twitter API
+[ ] Endpoints: POST /tweet, GET /timeline, etc.
+[ ] How to rate limit?
+
+DAY 9: CDN & Static Content Delivery
+
+Hour 1-2: Read System Design Primer
+
+[ ] CDN architecture
+[ ] Push vs. pull CDN
+[ ] Edge computing
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "How Netflix Delivers Videos" (12 min)
+[ ] ByteByteGo: "CDN Deep Dive" (15 min)
+Hour 4: Practice
+
+[ ] Design video streaming (like YouTube)
+[ ] Where to store videos?
+[ ] How to deliver efficiently?
+
+DAY 10: Microservices Architecture
+
+Hour 1-2: Read System Design Primer
+
+[ ] Microservices vs. monolith
+[ ] Service discovery
+[ ] API gateway
+[ ] Inter-service communication
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "Microservices Explained" (15 min)
+[ ] Gaurav Sen: "Microservices Architecture" (25 min)
+Hour 4: Practice
+
+[ ] Design Uber
+[ ] Which services? (User, Driver, Trip, Payment, Notification)
+[ ] How do they communicate?
+
+DAY 11: Data Processing - Batch vs Stream
+
+Hour 1-2: Read about data processing
+
+[ ] Batch processing (MapReduce, Spark)
+[ ] Stream processing (Kafka, Flink)
+[ ] Lambda architecture
+[ ] Kappa architecture
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "Batch vs Stream Processing" (12 min)
+[ ] Gaurav Sen: "Apache Kafka" (15 min)
+Hour 4: Practice
+
+[ ] Design analytics pipeline for e-commerce
+[ ] Real-time: view counts, clicks
+[ ] Batch: daily reports, recommendations
+
+DAY 12: Search & Indexing
+
+Hour 1-2: Read System Design Primer
+
+[ ] Inverted index
+[ ] Elasticsearch architecture
+[ ] Full-text search
+[ ] Ranking algorithms
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "How Search Engines Work" (15 min)
+[ ] Gaurav Sen: "Building Search System" (20 min)
+Hour 4: Practice
+
+[ ] Design search for e-commerce
+[ ] How to index products?
+[ ] How to rank results?
+
+DAY 13: Monitoring & Observability
+
+Hour 1-2: Read about observability
+
+[ ] Metrics (Prometheus)
+[ ] Logging (ELK stack)
+[ ] Tracing (Jaeger, Zipkin)
+[ ] Alerting
+Hour 3: Watch Videos
+
+[ ] ByteByteGo: "System Monitoring" (12 min)
+[ ] Gaurav Sen: "Distributed Tracing" (15 min)
+Hour 4: Practice
+
+[ ] Add monitoring to your previous designs
+[ ] What metrics to track?
+[ ] How to alert on failures?
+
+DAY 14: Week 2 Review & Mock Design #2
+
+Hour 1-2: Review Week 2
+
+[ ] Review all notes
+[ ] Identify weak areas
+[ ] Re-watch videos
+Hour 3-4: Mock Design #2
+
+[ ] Design Instagram
+[ ] Requirements: upload photos, follow users, feed
+[ ] Components: API, storage, CDN, database
+[ ] Scale: 1 billion users
+[ ] Time: 45 minutes
+
+WEEK 3 (DAYS 15-21): REAL-WORLD SYSTEMS
+
+Goal: Study how real companies solve problems
+
+
+DAY 15: Design Twitter
+
+Hour 1-2: Study Twitter architecture
+
+[ ] ByteByteGo: "Design Twitter" (20 min)
+[ ] Read blog posts about Twitter's architecture
+[ ] Understand timeline generation
+Hour 3-4: Practice
+
+[ ] Design Twitter from scratch
+[ ] Tweet storage (NoSQL)
+[ ] Timeline generation (fan-out approach)
+[ ] Scale considerations
+
+DAY 16: Design Netflix
+
+Hour 1-2: Study Netflix architecture
+
+[ ] ByteByteGo: "Design Netflix" (20 min)
+[ ] Video encoding/transcoding
+[ ] CDN strategy
+Hour 3-4: Practice
+
+[ ] Design video streaming platform
+[ ] Video storage (S3, object storage)
+[ ] Adaptive bitrate streaming
+[ ] CDN for delivery
+
+DAY 17: Design Uber
+
+Hour 1-2: Study Uber architecture
+
+[ ] ByteByteGo: "Design Uber" (20 min)
+[ ] Location services
+[ ] Matching algorithm
+[ ] Geo-hashing
+Hour 3-4: Practice
+
+[ ] Design ride-sharing app
+[ ] Driver-rider matching
+[ ] Real-time location updates
+[ ] Pricing algorithm (surge)
+
+DAY 18: Design WhatsApp
+
+Hour 1-2: Study WhatsApp architecture
+
+[ ] ByteByteGo: "Design WhatsApp" (20 min)
+[ ] Message delivery
+[ ] Read receipts
+[ ] Group chat
+Hour 3-4: Practice
+
+[ ] Design messaging app
+[ ] Message storage
+[ ] Online/offline status
+[ ] End-to-end encryption
+
+DAY 19: Design Amazon/E-commerce
+
+Hour 1-2: Study e-commerce architecture
+
+[ ] ByteByteGo: "Design Amazon" (20 min)
+[ ] Product catalog
+[ ] Shopping cart
+[ ] Payment processing
+Hour 3-4: Practice
+
+[ ] Design e-commerce platform
+[ ] Inventory management
+[ ] Order processing
+[ ] Recommendation engine
+
+DAY 20: Design Google Drive
+
+Hour 1-2: Study file storage systems
+
+[ ] ByteByteGo: "Design Dropbox" (20 min)
+[ ] File synchronization
+[ ] Conflict resolution
+[ ] Block-level deduplication
+Hour 3-4: Practice
+
+[ ] Design file storage/sync
+[ ] Upload/download optimization
+[ ] Version control
+[ ] Sharing permissions
+
+DAY 21: Week 3 Review & Mock Design #3
+
+Hour 1-2: Review Week 3
+
+[ ] Review all 6 designs
+[ ] Common patterns across systems
+[ ] Your strengths/weaknesses
+Hour 3-4: Mock Design #3
+
+[ ] Design YouTube
+[ ] Full 45-minute mock interview
+[ ] Record yourself
+[ ] Evaluate performance
+
+WEEK 4 (DAYS 22-30): INTERVIEW PREP & PRACTICE
+
+Goal: Master interview technique, practice extensively
+
+
+DAY 22: Interview Framework - RADIO
+
+Hour 1-2: Learn RADIO framework
+
+Requirements (functional + non-functional)
+API design
+Data model
+Infrastructure (high-level design)
+Optimization & deep dives
+Hour 3-4: Practice RADIO
+
+[ ] Apply to previous design (Twitter)
+[ ] Time each section (5-10-10-15-5 minutes)
+[ ] Practice smooth transitions
+
+DAY 23-27: Mock Interviews (5 days)
+
+Each day: Pick ONE system, design in 45 min
+
+Day 23: Design Spotify (music streaming) Day 24: Design LinkedIn (professional network) Day 25: Design Airbnb (booking platform) Day 26: Design TikTok (short video platform) Day 27: Design Slack (team messaging)
+
+Daily structure (4 hours):
+
+Hour 1: Research system (how it actually works)
+Hour 2: Design system (45 min timed)
+Hour 3: Review & improve design
+Hour 4: Watch expert solution (ByteByteGo/Gaurav Sen)
+
+DAY 28: Data-Specific Systems
+
+Focus on data engineering systems:
+
+Hour 1-2: Study data systems
+
+[ ] Design data warehouse (Snowflake-style)
+[ ] Design data lake
+[ ] Design ETL pipeline
+[ ] Design real-time analytics
+Hour 3-4: Practice
+
+[ ] Design analytics platform
+[ ] Batch + stream processing
+[ ] OLAP vs OLTP considerations
+
+DAY 29: Weak Areas Deep Dive
+
+Hour 1-2: Identify weak areas
+
+[ ] Review all 30 days
+[ ] Which topics are unclear?
+[ ] Which designs were weakest?
+Hour 3-4: Study weak areas
+
+[ ] Re-watch videos
+[ ] Re-read System Design Primer
+[ ] Redo practice problems
+
+DAY 30: Final Mock Interview
+
+Hour 1-2: Full mock interview
+
+[ ] Pick hardest system design
+[ ] 45 minutes, record yourself
+[ ] Pretend interviewer is present
+[ ] Use RADIO framework
+Hour 3-4: Self-evaluation
+
+[ ] Watch recording
+[ ] What went well?
+[ ] What needs improvement?
+[ ] Create ongoing practice plan
+
+📝 DAILY ROUTINE STRUCTURE
+
+Optimal 4-hour daily schedule:
+
+Hour 1 (9-10 AM): Reading/Concepts
+
+System Design Primer
+Technical articles
+Take notes
+Hour 2 (10-11 AM): Video Learning
+
+ByteByteGo (2-3 videos)
+Gaurav Sen (1-2 videos)
+Active watching (pause, think, resume)
+Hour 3 (11 AM-12 PM): Practice/Design
+
+Apply concepts
+Draw diagrams
+Think through trade-offs
+Hour 4 (12-1 PM): Review/Reinforce
+
+Review notes
+Identify gaps
+Prepare for next day
+
+🎯 KEY CONCEPTS CHECKLIST
+
+By end of 30 days, you should master:
+
+
+Scalability:
+
+[ ] Horizontal vs vertical scaling
+[ ] Load balancing (round-robin, least connections, consistent hashing)
+[ ] Caching strategies (LRU, write-through, write-back)
+[ ] CDN (push vs pull)
+
+Databases:
+
+[ ] SQL vs NoSQL (when to use each)
+[ ] Replication (master-slave, master-master)
+[ ] Sharding (horizontal partitioning)
+[ ] Indexing (B-tree, hash)
+[ ] ACID vs BASE
+
+Communication:
+
+[ ] REST vs GraphQL vs gRPC
+[ ] Synchronous vs asynchronous
+[ ] Message queues (Kafka, RabbitMQ)
+[ ] WebSockets (for real-time)
+
+Performance:
+
+[ ] Latency vs throughput
+[ ] Bottleneck identification
+[ ] Profiling and monitoring
+[ ] Rate limiting
+
+Reliability:
+
+[ ] Replication and redundancy
+[ ] Failover strategies
+[ ] Circuit breakers
+[ ] Health checks
+
+Data Processing:
+
+[ ] Batch (MapReduce, Spark)
+[ ] Stream (Kafka Streams, Flink)
+[ ] Lambda architecture
+[ ] ETL pipelines
+
+🎤 INTERVIEW PREPARATION TIPS
+
+How to approach system design interview:
+
+Step 1: Clarify requirements (5 min)
+
+Ask about users (how many?)
+Ask about scale (requests per second?)
+Ask about features (what's in scope?)
+Functional vs non-functional requirements
+Step 2: High-level design (10 min)
+
+Draw boxes and arrows
+Client → Load Balancer → API → Database
+Explain each component briefly
+Get interviewer buy-in
+Step 3: Data model (10 min)
+
+What data to store?
+SQL or NoSQL?
+How to shard?
+Show schemas/documents
+Step 4: Deep dives (15 min)
+
+Interviewer picks 2-3 components
+Explain in detail
+Trade-offs, alternatives
+Bottlenecks and solutions
+Step 5: Wrap up (5 min)
+
+Review design
+Discuss monitoring
+Discuss failure scenarios
+
+📚 ADDITIONAL FREE RESOURCES
+
+Books (Free PDFs available):
+
+"Designing Data-Intensive Applications" - Martin Kleppmann
+"System Design Interview" - Alex Xu (Volume 1 & 2)
+GitHub Repos:
+
+System Design Primer (donnemartin)
+Awesome System Design (madd86)
+System Design Interview (checkcheckzz)
+Websites:
+
+High Scalability (highscalability.com)
+Engineering blogs (Netflix, Uber, Airbnb)
+
+✅ WEEKLY GOALS SUMMARY
+
+Week 1: Foundations (scalability, caching, databases, queues) Week 2: Components (APIs, CDN, microservices, search, monitoring) Week 3: Real systems (Twitter, Netflix, Uber, WhatsApp, Amazon, Drive) Week 4: Interview prep (RADIO framework, mocks, weak areas, final review)
+
+
+💪 SUCCESS METRICS
+
+After 30 days, you should be able to:
+
+[ ] Design any system in 45 minutes
+[ ] Explain trade-offs confidently
+[ ] Identify bottlenecks
+[ ] Scale systems to billions of users
+[ ] Pass FAANG system design interviews
+
+🎯 START TOMORROW (FEB 15)
+
+Your first day:
+
+9-10 AM: Read System Design Primer intro
+10-11 AM: Watch ByteByteGo scalability videos
+11 AM-12 PM: Draw simple web app architecture
+12-1 PM: Review and prepare for Day 2
+This plan will prepare you for:
+
+✅ Amex technical interviews
+✅ FAANG system design rounds
+✅ Senior/Staff engineer interviews
+✅ Architectural discussions
+Commit to 4 hours/day for 30 days ✅
+
+You'll be ready for ANY system design interview 💪
+
+Let me know:
+
+If Theresa responds to your email
+How your first day of system design study goes
+How Monday's Amex call goes
+YOU'VE GOT THIS! 🚀🔥
