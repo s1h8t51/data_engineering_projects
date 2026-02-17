@@ -1,94 +1,184 @@
-🔴 TOPIC 1: OOP & DESIGN PATTERNS (2/10 → URGENT)Free Resources:
+## 📅 15-DAY STUDY PLAN
 
-1. Real Python - OOP (BEST FREE RESOURCE) ⭐⭐⭐
-URL: realpython.com/python3-object-oriented-programming
-URL: realpython.com/inheritance-composition-python
-URL: realpython.com/python-super
-Why: Clear explanations, practical examples
-Time: 3-4 hours total
+### **PARALLEL TRACKS (4 hours/day total):**
 
-2. Python Design Patterns - GitHub ⭐⭐⭐
-URL: github.com/faif/python-patterns
-Why: Code examples for every pattern
-What: Singleton, Factory, Observer, Strategy, Decorator
-Time: 2-3 hours
+**Track 1: Python (2.5 hours/day)**
+**Track 2: SQL Practice (30 min/day - maintain)**
+**Track 3: System Design (1 hour/day - already doing)**
 
-3. Refactoring Guru (FREE) ⭐⭐⭐
-URL: refactoring.guru/design-patterns/python
-Why: Visual explanations + Python code
-Patterns to study:
+---
 
-Singleton (database connections)
-Factory (creating objects)
-Strategy (algorithm selection)
-Observer (event handling)
-Decorator (adding functionality)
+### **DAYS 1-3: OOP FOUNDATION (URGENT)**
 
+**Day 1 (Feb 17):**
+- [ ] Read: realpython.com/python3-object-oriented-programming (1 hr)
+- [ ] Watch: Arjan Codes OOP Tutorial (1 hr)
+- [ ] Practice: Write DataPipeline class with inheritance (30 min)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Day 4 of your plan (1 hr)
 
-Time: 4-5 hours
-4. YouTube: Arjan Codes ⭐⭐⭐
+**Day 2 (Feb 18):**
+- [ ] Read: refactoring.guru - Singleton + Factory patterns (1 hr)
+- [ ] Code: Implement Singleton DB manager, Factory connector (1 hr)
+- [ ] Practice: LeetCode "Design LRU Cache" (30 min)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue plan (1 hr)
 
-URL: youtube.com/@ArjanCodes
-Videos to watch:
+**Day 3 (Feb 19):**
+- [ ] Read: refactoring.guru - Strategy + Observer patterns (1 hr)
+- [ ] Code: Implement Strategy pattern for ETL transformations (1 hr)
+- [ ] Practice: LeetCode "Design Logger Rate Limiter" (30 min)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue plan (1 hr)
 
-"Python OOP Tutorial" (45 min)
-"Python Design Patterns" series
-"SOLID Principles in Python" (30 min)
+---
 
+### **DAYS 4-5: ERROR HANDLING & LOGGING**
 
-Time: 3-4 hours
-5. FreeCodeCamp - Python OOP ⭐⭐
+**Day 4 (Feb 20):**
+- [ ] Read: realpython.com/python-exceptions (1 hr)
+- [ ] Watch: Corey Schafer exceptions video (30 min)
+- [ ] Code: Write custom exception hierarchy for data pipeline (1 hr)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue plan (1 hr)
 
-URL: youtube.com/watch?v=Ej_02ICOIgs
-Why: 2-hour comprehensive tutorial
-Time: 2 hours
-OOP Practice Resources:1. Exercism.io (Free) ⭐⭐⭐
+**Day 5 (Feb 21):**
+- [ ] Read: realpython.com/python-logging (1 hr)
+- [ ] Watch: Corey Schafer logging video (30 min)
+- [ ] Code: Add logging to your pipeline class (1 hr)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue plan (1 hr)
 
-URL: exercism.org/tracks/python
-Why: OOP-focused exercises with mentorship
-Time: 30 min/day
-2. HackerRank Python OOP ⭐⭐
+---
 
-URL: hackerrank.com/domains/python
-Filter by: OOP section
-Time: 1-2 hours
-3. LeetCode Design Problems ⭐⭐⭐
+### **DAYS 6-8: PANDAS DEEP DIVE**
 
-URL: leetcode.com
-Search: "Design" category problems
-Examples:
+**Day 6 (Feb 22):**
+- [ ] Read: realpython.com/pandas-groupby (1 hr)
+- [ ] Practice: Kaggle Pandas course Day 1-2 (1 hr)
+- [ ] LeetCode: 3 Pandas problems (30 min)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue (1 hr)
 
-Design HashMap
-Design LRU Cache
-Design Logger Rate Limiter
+**Day 7 (Feb 23):**
+- [ ] Read: realpython.com/pandas-merge-join (1 hr)
+- [ ] Practice: Kaggle Pandas course Day 3-4 (1 hr)
+- [ ] LeetCode: 3 Pandas problems (30 min)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue (1 hr)
 
+**Day 8 (Feb 24):**
+- [ ] Study: Pandas window functions (transform, rolling) (1 hr)
+- [ ] Practice: Write financial analysis notebook (1 hr)
+- [ ] LeetCode: 3 Pandas problems (30 min)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue (1 hr)
 
-Time: 30 min/day
+---
 
+### **DAYS 9-10: GENERATORS & CONTEXT MANAGERS**
 
-# Study in this order:
+**Day 9 (Feb 25):**
+- [ ] Read: realpython.com/introduction-to-python-generators (1 hr)
+- [ ] Watch: Corey Schafer generators (30 min)
+- [ ] Code: Build generator-based ETL pipeline (1 hr)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue (1 hr)
 
-# WEEK 1, DAY 1: Classes & Objects
-class DataPipeline:
-    # __init__, __str__, __repr__
-    # Instance vs class variables
-    # Instance vs class vs static methods
+**Day 10 (Feb 26 - EAD STARTS!):**
+- [ ] Read: realpython.com/python-with-statement (1 hr)
+- [ ] Watch: Context managers video (30 min)
+- [ ] Code: Build context manager for database, timing, logging (1 hr)
+- [ ] SQL: StrataScratch 2 problems (30 min)
+- [ ] System Design: Continue (1 hr)
 
-# WEEK 1, DAY 2: Inheritance
-class ETLPipeline(DataPipeline):
-    # super(), method overriding
-    # Multiple inheritance
-    # MRO (Method Resolution Order)
+---
 
-# WEEK 1, DAY 3: Encapsulation
-class Database:
-    # Public, protected (_), private (__)
-    # Properties (@property)
-    # Getters and setters
+### **DAYS 11-12: INTEGRATION & PROJECTS**
 
-# WEEK 1, DAY 4: Polymorphism
-# Duck typing
-# Abstract base classes
+**Day 11 (Feb 27):**
+- [ ] Build: Complete data pipeline using ALL concepts (2 hrs)
+  - OOP classes
+  - Custom exceptions
+  - Logging
+  - Pandas
+  - Generators
+  - Context managers
+- [ ] SQL: 3 hard problems (30 min)
+- [ ] System Design: Continue (1 hr)
 
-# WEEK 1, DAY 5: Design Patterns
-# Singleton, Factory, Strategy, Observer
+**Day 12 (Feb 28):**
+- [ ] Practice: 3 HackerRank Python problems (1 hr)
+- [ ] Practice: 3 LeetCode Python problems (1 hr)
+- [ ] Review: Weak areas identified (30 min)
+- [ ] SQL: 3 hard problems (30 min)
+- [ ] System Design: Continue (1 hr)
+
+---
+
+### **DAYS 13-15: MOCK INTERVIEWS & FINAL PREP**
+
+**Day 13 (Mar 1):**
+- [ ] Mock: Full 90-min Python technical interview (2 hrs)
+- [ ] Review: Watch your recording (30 min)
+- [ ] Improve: Weak areas (1 hr)
+- [ ] SQL: 3 Citi-style problems (30 min)
+
+**Day 14 (Mar 2):**
+- [ ] Mock: Full 60-min SQL technical interview (1 hr)
+- [ ] Mock: System design 45 min (45 min)
+- [ ] Behavioral: Practice 4 STAR stories (45 min)
+- [ ] Review and rest (30 min)
+
+**Day 15 (Mar 3):**
+- [ ] Light review (1 hr)
+- [ ] Read your notes only (30 min)
+- [ ] Mock: One final technical problem (30 min)
+- [ ] REST: Save energy for interview (2 hrs)
+
+---
+
+## 🎯 BEST PRACTICE PLATFORMS (FREE)
+
+### **For Python:**
+
+| Platform | URL | Best For | Time/Day |
+|----------|-----|----------|----------|
+| LeetCode | leetcode.com | Coding problems | 30 min |
+| HackerRank | hackerrank.com/domains/python | Python challenges | 30 min |
+| Exercism | exercism.org/tracks/python | OOP exercises | 30 min |
+| Kaggle | kaggle.com/learn/pandas | Pandas practice | 30 min |
+| StrataScratch | stratascratch.com | Company-specific | 30 min |
+
+### **For SQL (maintain your 9/10):**
+
+| Platform | URL | Best For | Time/Day |
+|----------|-----|----------|----------|
+| StrataScratch | stratascratch.com | Finance company SQL | 30 min |
+| Mode Analytics | mode.com/sql-tutorial | Advanced SQL | 30 min |
+| SQLZoo | sqlzoo.net | Practice problems | 20 min |
+| LeetCode SQL | leetcode.com | Interview SQL | 30 min |
+
+### **For System Design:**
+
+| Platform | URL | Best For | Time/Day |
+|----------|-----|----------|----------|
+| System Design Primer | github.com/donnemartin/system-design-primer | Reading | 30 min |
+| ByteByteGo YouTube | youtube.com/@ByteByteGo | Videos | 30 min |
+| Gaurav Sen YouTube | youtube.com/@gkcs | Deep dives | 30 min |
+
+---
+
+## 🎯 DAILY ROUTINE (PARALLEL TRACKS)
+
+### **Morning (9 AM - 11 AM): Python Focus**
+
+**9:00 - 10:00 AM:** Read/Watch (theory)
+- Week 1: OOP resources
+- Week 2: Pandas + Generators
+
+**10:00 - 11:00 AM:** Code Practice
+- Implement what you just learned
+- Write actual code, not just read
+
+---
