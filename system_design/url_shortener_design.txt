@@ -1,0 +1,513 @@
+📊 CASE STUDY 1 EVALUATION: URL SHORTENER DESIGN
+
+🎯 OVERALL ASSESSMENT
+
+Your Score: 3.2/5 (Good first attempt!) ✅
+
+Strengths:
+
+✅ Good AWS service selection
+✅ Understand read-heavy nature
+✅ Caching strategy present
+✅ Analytics pipeline considered
+✅ Good instinct on scalability
+Areas for Improvement:
+
+⚠️ Short URL generation algorithm has issues
+⚠️ Schema design needs refinement
+⚠️ Some architectural choices overcomplicated
+⚠️ Missing capacity calculations
+⚠️ Cache eviction strategy unclear
+📝 DETAILED QUESTION-BY-QUESTION REVIEW
+
+QUESTION 1: Database Choice
+
+Your Answer: DynamoDB (NoSQL key-value)
+
+Your Score: 4/5 ✅
+
+What you got RIGHT:
+
+✅ Correct choice (NoSQL for simple key-value)
+✅ Identified read-heavy workload
+✅ Mentioned scalability (1B+ URLs)
+✅ Key-value model fits perfectly
+What you MISSED:
+
+⚠️ Schema needs refinement (see below)
+⚠️ Didn't mention partition key strategy
+⚠️ No discussion of capacity units (RCU/WCU)
+CORRECT ANSWER:
+
+Choice: DynamoDB (NoSQL) is CORRECT ✅
+
+Schema Design:
+
+Primary table: url_mappings
+
+Partition Key: short_code (string, 7 chars)
+Attributes:
+  - short_code: "abc1234"
+  - long_url: "https://example.com/very/long/path..."
+  - created_at: 1708128000 (timestamp)
+  - user_id: "user_123" (optional)
+  - expiry_date: 1739664000 (optional, for TTL)
+  - click_count: 0 (for quick analytics)
+Global Secondary Index (GSI): user_urls
+
+Partition Key: user_id
+Sort Key: created_at
+Purpose: Allow users to see their shortened URLs
+Why DynamoDB:
+
+Simple access pattern: short_code → long_url
+Horizontal scaling built-in
+Low latency (<10ms reads)
+Auto-scaling for traffic spikes
+Cost-effective for read-heavy workload
+Capacity Planning:
+
+100M reads/day = 1,157 reads/sec
+Assume 90% cache hit ratio → 116 reads/sec from DB
+Each read = 1 RCU (4KB) → Need ~150 RCU provisioned
+Writes negligible (new URLs) → 10-20 WCU sufficient
+Your Error: You said "long URL and short URL as key-value pair" - this is backwards. short_code should be the key (partition key), long_url should be the value (attribute).
+
+QUESTION 2: Short URL Generation Algorithm
+
+Your Answer: Extract domain name + API name + first/last 5 letters of encryption
+
+Your Score: 1.5/5 ❌
+
+What you got WRONG:
+
+❌ Algorithm is too complex
+❌ Not guaranteed unique (collisions likely)
+❌ Too long (15-30 chars - should be 6-8)
+❌ Depends on input URL structure (what if no "API name"?)
+❌ Not scalable
+CORRECT ANSWER:
+
+Algorithm: Base62 Encoding with Auto-Increment Counter
+
+Step 1: Generate unique ID (8 bytes = 64 bits)
+
+# Option A: Auto-increment counter (distributed)
+unique_id = get_next_id_from_zookeeper()  # e.g., 123456789
+
+# Option B: Twitter Snowflake-style
+unique_id = timestamp (41 bits) + machine_id (10 bits) + sequence (12 bits)
+Step 2: Encode to Base62 (a-z, A-Z, 0-9 = 62 chars)
+
+def base62_encode(num):
+    chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    if num == 0:
+        return chars[0]
+    
+    result = ""
+    while num > 0:
+        result = chars[num % 62] + result
+        num //= 62
+    return result
+
+short_code = base62_encode(123456789)  # → "8M0kX" (5-7 chars)
+Step 3: Validate length
+
+# For 1 billion URLs, need at least 6 characters
+# 62^6 = 56.8 billion possible codes (enough!)
+# 62^7 = 3.5 trillion possible codes (future-proof)
+
+if len(short_code) < 7:
+    short_code = short_code.zfill(7)  # Pad with zeros
+Why this works:
+
+✅ Guaranteed unique (counter never repeats)
+✅ Short (6-7 characters)
+✅ Scalable (billions of URLs)
+✅ Fast (simple math, no hashing)
+✅ No collisions (deterministic)
+Alternative: Random Generation with Collision Check
+
+import random
+import string
+
+def generate_short_code():
+    chars = string.ascii_letters + string.digits  # a-z, A-Z, 0-9
+    while True:
+        code = ''.join(random.choices(chars, k=7))
+        if not exists_in_db(code):  # Check DynamoDB
+            return code
+        # Collision - try again (rare with 62^7 possibilities)
+Pros: Truly random, hard to predict Cons: Requires DB check (slower), rare collisions
+
+Your Error: Your algorithm (domain + API + encryption) is:
+
+Not unique (two similar URLs → same short code → collision)
+Too long (15-30 chars defeats purpose of "short" URL)
+Not URL-agnostic (what if URL has no "API name"?)
+QUESTION 3: Caching Strategy
+
+Your Answer: Reverse Proxy (Nginx?) + DAX + refresh every 8-12 hours
+
+Your Score: 3/5 ⚠️
+
+What you got RIGHT:
+
+✅ Identified need for caching
+✅ DAX for DynamoDB caching
+✅ Multi-layer caching (CDN-like + DAX)
+What you MISSED:
+
+⚠️ Refresh timing wrong (should use LRU, not periodic refresh)
+⚠️ No specific eviction policy
+⚠️ Reverse proxy placement unclear
+CORRECT ANSWER:
+
+Three-Layer Caching Architecture:
+
+Layer 1: CloudFront CDN (Edge Caching)
+
+Purpose: Cache at edge locations (200+ worldwide)
+Cache: Popular short URLs (top 10% = 90% traffic)
+TTL: 1 hour
+Eviction: LRU (Least Recently Used)
+Hit Ratio: 80-90%
+Layer 2: Application-Level Cache (Redis/ElastiCache)
+
+Purpose: Fast in-memory cache for app servers
+Cache: Recently accessed short URLs
+Size: 10 million URLs (~1GB memory)
+TTL: 30 minutes
+Eviction: LRU
+Hit Ratio: 85-95% (for cache misses from CDN)
+Layer 3: DAX (DynamoDB Accelerator)
+
+Purpose: Reduce DynamoDB load
+Cache: All recent queries (not just popular)
+TTL: 5 minutes
+Eviction: TTL-based + LRU
+Hit Ratio: 99%+ for queries reaching this layer
+Caching Logic:
+
+1. Request arrives → Check CloudFront CDN
+   - HIT → Return immediately (200ms latency)
+   - MISS → Continue to Layer 2
+
+2. Check Redis cache
+   - HIT → Return (10ms latency)
+   - MISS → Continue to Layer 3
+
+3. Check DAX cache
+   - HIT → Return (2ms latency)
+   - MISS → Query DynamoDB (10ms latency)
+
+4. DynamoDB returns result → Update all cache layers
+Cache Invalidation:
+
+On URL update: Purge from all cache layers (rare event)
+On URL delete: Purge from all cache layers
+No periodic refresh needed - LRU handles this automatically
+Why NOT periodic refresh:
+
+Popular URLs stay in cache automatically (LRU)
+Unpopular URLs evicted naturally
+No need to refresh every 8 hours (wastes resources)
+Your Error: "Refresh cache every 8-12 hours" is inefficient. Use LRU eviction instead - let popular URLs stay cached, unpopular ones naturally evicted.
+
+QUESTION 4: Scalability & Sharding
+
+Your Answer: Hash on domain name + API name, consistent hashing
+
+Your Score: 2.5/5 ❌
+
+What you got WRONG:
+
+❌ Sharding on "domain name" doesn't work (short code, not long URL)
+❌ DynamoDB auto-shards (you don't manually shard)
+❌ S3 backup mentioned but not explained
+CORRECT ANSWER:
+
+DynamoDB Auto-Sharding:
+
+DynamoDB automatically shards data based on partition key (short_code).
+
+How it works:
+
+1. Hash the partition key (short_code)
+   hash("abc1234") = 0x7A3F2B1C...
+
+2. Map hash to partition
+   0x7A3F2B1C → Partition 42 (out of 1000 partitions)
+
+3. Route request to that partition's node
+   Partition 42 → DynamoDB Node #5
+You don't manually shard - DynamoDB does this automatically as data grows.
+
+Capacity Planning:
+
+Total URLs: 1 billion
+Average URL size: 500 bytes (short_code + long_url + metadata)
+Total storage: 1B × 500 bytes = 500 GB
+
+DynamoDB partitions:
+- Each partition: 10 GB max, 3000 RCU, 1000 WCU
+- Need: 500 GB ÷ 10 GB = 50 partitions minimum
+- DynamoDB auto-scales as you approach limits
+Replication for High Availability:
+
+- DynamoDB automatically replicates across 3 AZs
+- No manual setup needed
+- Built-in fault tolerance
+Backup Strategy:
+
+- DynamoDB Point-in-Time Recovery (PITR): Enable for 35 days backup
+- Daily snapshot to S3: For long-term archival
+- Cross-region replication: For disaster recovery (optional)
+Your Error: You said "shard based on domain name" - but we're querying by short_code, not domain. DynamoDB shards based on partition key automatically.
+
+QUESTION 5: Analytics & Tracking
+
+Your Answer: Lambda counts clicks → Kinesis Firehose → Analytics stream
+
+Your Score: 4/5 ✅
+
+What you got RIGHT:
+
+✅ Async processing (don't block redirects)
+✅ Lambda for lightweight processing
+✅ Kinesis Firehose for streaming
+✅ Separate analytics pipeline
+What you MISSED:
+
+⚠️ Where does analytics data go? (Redshift? S3?)
+⚠️ Real-time vs. batch analytics not distinguished
+CORRECT ANSWER:
+
+Analytics Architecture:
+
+Step 1: Capture Click Event (Don't Block Redirect)
+
+# Redirect API (EC2/Lambda)
+def redirect(short_code):
+    # 1. Get long URL from cache/DB
+    long_url = get_long_url(short_code)
+    
+    # 2. Async log click event (non-blocking)
+    log_click_async(short_code, user_ip, user_agent, timestamp)
+    
+    # 3. Redirect immediately (don't wait for logging)
+    return redirect_302(long_url)
+
+# Async logging
+def log_click_async(short_code, ip, user_agent, timestamp):
+    event = {
+        'short_code': short_code,
+        'ip': ip,
+        'user_agent': user_agent,
+        'timestamp': timestamp,
+        'country': geoip_lookup(ip)
+    }
+    kinesis_firehose.put_record(event)  # Fire and forget
+Step 2: Stream Processing (Kinesis Firehose)
+
+Kinesis Firehose:
+  - Buffer: 1MB or 60 seconds (whichever first)
+  - Transform: Lambda enriches data (geo-location, device type)
+  - Destination: S3 (for batch) + Redshift (for queries)
+Step 3: Storage & Analysis
+
+Option A: Batch Analytics (S3 + Athena)
+
+Kinesis Firehose → S3 (partitioned by date)
+└─ s3://analytics-bucket/year=2026/month=02/day=16/clicks.parquet
+
+Query with Athena (serverless SQL):
+SELECT short_code, COUNT(*) as clicks
+FROM clicks
+WHERE date = '2026-02-16'
+GROUP BY short_code
+ORDER BY clicks DESC
+LIMIT 100;
+Option B: Real-Time Analytics (Kinesis Analytics + DynamoDB)
+
+Kinesis Firehose → Kinesis Data Analytics
+  - Windowed aggregation (1-minute windows)
+  - Output: DynamoDB table `click_counts`
+
+Schema:
+  short_code (key) | click_count | last_updated
+
+Update in real-time for dashboard display.
+Option C: Hybrid (Best Approach)
+
+Kinesis Firehose:
+  ├─ S3 (batch, historical data, low cost)
+  └─ Redshift (fast queries, dashboards)
+
+For real-time:
+  Lambda updates DynamoDB `click_count` field directly
+Dashboard:
+
+- Daily clicks per URL (Athena query on S3)
+- Real-time top URLs (DynamoDB)
+- Geographic distribution (Redshift query)
+- Referrer analysis (Redshift query)
+Why This Works:
+
+✅ Redirects not blocked (async logging)
+✅ Scalable (Kinesis handles millions of events/sec)
+✅ Cost-effective (S3 storage cheap)
+✅ Flexible (Athena for ad-hoc queries, Redshift for dashboards)
+Your Answer was close! You just needed to specify where Firehose sends data (S3/Redshift).
+
+🏗️ COMPLETE ARCHITECTURE (CORRECT DESIGN)
+
+High-Level Architecture:
+
+User Request
+    ↓
+CloudFront CDN (Layer 1 Cache)
+    ↓ (cache miss)
+Application Load Balancer (ALB)
+    ↓
+EC2 Auto Scaling Group (or Lambda)
+    ├─ Check Redis Cache (Layer 2)
+    ├─ Check DAX Cache (Layer 3)
+    └─ Query DynamoDB
+        ↓
+    Return long_url → 302 Redirect
+    
+    (Async - don't block redirect)
+    └─ Log click event → Kinesis Firehose
+                            ↓
+                        S3 + Redshift
+Components:
+
+1. API Layer (EC2 or Lambda)
+
+POST /shorten
+  Input: long_url
+  Output: short_url
+  Logic:
+    1. Generate unique ID (counter or snowflake)
+    2. Base62 encode → short_code
+    3. Store in DynamoDB
+    4. Return https://short.ly/{short_code}
+
+GET /{short_code}
+  Input: short_code
+  Output: 302 Redirect to long_url
+  Logic:
+    1. Check CloudFront cache
+    2. Check Redis cache
+    3. Check DAX cache
+    4. Query DynamoDB
+    5. Log click event (async)
+    6. Return 302 Redirect
+2. Database (DynamoDB)
+
+Table: url_mappings
+  Partition Key: short_code
+  Attributes: long_url, created_at, click_count
+  
+Capacity:
+  Read: 150 RCU (provisioned)
+  Write: 20 WCU (provisioned)
+  Auto-scaling: Enabled (scale up to 1000 RCU if needed)
+3. Caching (3 Layers)
+
+Layer 1: CloudFront CDN (80-90% hit ratio)
+Layer 2: Redis/ElastiCache (85-95% hit ratio for CDN misses)
+Layer 3: DAX (99%+ hit ratio for Redis misses)
+4. Analytics (Kinesis Pipeline)
+
+Lambda → Kinesis Firehose → S3 + Redshift
+  
+Real-time: DynamoDB click_count field
+Batch: Athena queries on S3 data
+5. Scaling
+
+ALB: Auto-scale based on CPU (target 70%)
+EC2: t3.medium instances, 10-100 instances
+DynamoDB: Auto-scaling enabled
+Redis: r6g.large (13GB memory)
+📊 CAPACITY CALCULATIONS (YOU MISSED THIS)
+
+Storage:
+
+1 billion URLs × 500 bytes = 500 GB
+DynamoDB: ~$125/month (on-demand pricing)
+S3 backup: ~$12/month
+Traffic:
+
+100M redirects/day = 1,157 redirects/sec
+
+With 90% cache hit ratio:
+  - CloudFront serves: 1,041 req/sec
+  - Application serves: 116 req/sec
+  - DynamoDB queries: ~12 req/sec (90% hit at Redis)
+Cost Estimate (Monthly):
+
+CloudFront: $50 (1TB data transfer)
+ALB: $20 (fixed) + $8 (LCU charges)
+EC2: 5 × t3.medium = $100
+DynamoDB: $125 (storage + reads)
+Redis: $80 (r6g.large)
+Kinesis: $30 (analytics streaming)
+S3: $12 (backup)
+Total: ~$425/month
+✅ SUMMARY: YOUR STRENGTHS & IMPROVEMENTS
+
+Your Strengths:
+
+✅ Good AWS service selection (DynamoDB, Lambda, Firehose)
+✅ Understood read-heavy nature and caching needs
+✅ Async analytics pipeline (good design)
+✅ Considered scalability
+Areas to Improve:
+
+❌ Short URL generation algorithm (too complex, not unique)
+⚠️ Cache eviction strategy (use LRU, not periodic refresh)
+⚠️ Missing capacity calculations (storage, traffic, cost)
+⚠️ Schema design needs refinement (partition key clarity)
+⚠️ Sharding explanation incorrect (DynamoDB auto-shards)
+🎯 YOUR FINAL GRADE: 3.2/5
+
+Breakdown:
+
+Q1 (Database): 4/5 ✅
+Q2 (Short URL Gen): 1.5/5 ❌
+Q3 (Caching): 3/5 ⚠️
+Q4 (Scalability): 2.5/5 ❌
+Q5 (Analytics): 4/5 ✅
+Average: 3.0/5 → Adjusted to 3.2/5 for good first attempt
+
+💪 NEXT STEPS
+
+1. Study these concepts:
+
+[ ] Base62 encoding algorithm
+[ ] LRU cache eviction
+[ ] DynamoDB partition key design
+[ ] Capacity planning (RCU/WCU calculations)
+2. Redo this case study in 3 days:
+
+[ ] Apply correct short URL algorithm
+[ ] Fix caching strategy (LRU)
+[ ] Include capacity calculations
+[ ] Compare your new answer vs. today's
+3. Continue 30-day plan:
+
+[ ] Day 4: Database Scaling
+[ ] Day 5: Async Processing
+[ ] Day 6: CAP Theorem
+[ ] Day 7: Week 1 Review
+4. Attempt Case Study 2 (Instagram) in Week 3
+
+You're on the right track! 💪
+
+For your first system design, 3.2/5 is GOOD ✅
+
+With practice, you'll easily hit 4.5-5/5 🚀
+
+Keep going! Let me know when you've completed Day 4-7, then we'll review Case Study 2!
