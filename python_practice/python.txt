@@ -1,0 +1,94 @@
+🔴 TOPIC 1: OOP & DESIGN PATTERNS (2/10 → URGENT)Free Resources:
+
+1. Real Python - OOP (BEST FREE RESOURCE) ⭐⭐⭐
+URL: realpython.com/python3-object-oriented-programming
+URL: realpython.com/inheritance-composition-python
+URL: realpython.com/python-super
+Why: Clear explanations, practical examples
+Time: 3-4 hours total
+
+2. Python Design Patterns - GitHub ⭐⭐⭐
+URL: github.com/faif/python-patterns
+Why: Code examples for every pattern
+What: Singleton, Factory, Observer, Strategy, Decorator
+Time: 2-3 hours
+
+3. Refactoring Guru (FREE) ⭐⭐⭐
+URL: refactoring.guru/design-patterns/python
+Why: Visual explanations + Python code
+Patterns to study:
+
+Singleton (database connections)
+Factory (creating objects)
+Strategy (algorithm selection)
+Observer (event handling)
+Decorator (adding functionality)
+
+
+Time: 4-5 hours
+4. YouTube: Arjan Codes ⭐⭐⭐
+
+URL: youtube.com/@ArjanCodes
+Videos to watch:
+
+"Python OOP Tutorial" (45 min)
+"Python Design Patterns" series
+"SOLID Principles in Python" (30 min)
+
+
+Time: 3-4 hours
+5. FreeCodeCamp - Python OOP ⭐⭐
+
+URL: youtube.com/watch?v=Ej_02ICOIgs
+Why: 2-hour comprehensive tutorial
+Time: 2 hours
+OOP Practice Resources:1. Exercism.io (Free) ⭐⭐⭐
+
+URL: exercism.org/tracks/python
+Why: OOP-focused exercises with mentorship
+Time: 30 min/day
+2. HackerRank Python OOP ⭐⭐
+
+URL: hackerrank.com/domains/python
+Filter by: OOP section
+Time: 1-2 hours
+3. LeetCode Design Problems ⭐⭐⭐
+
+URL: leetcode.com
+Search: "Design" category problems
+Examples:
+
+Design HashMap
+Design LRU Cache
+Design Logger Rate Limiter
+
+
+Time: 30 min/day
+
+
+# Study in this order:
+
+# WEEK 1, DAY 1: Classes & Objects
+class DataPipeline:
+    # __init__, __str__, __repr__
+    # Instance vs class variables
+    # Instance vs class vs static methods
+
+# WEEK 1, DAY 2: Inheritance
+class ETLPipeline(DataPipeline):
+    # super(), method overriding
+    # Multiple inheritance
+    # MRO (Method Resolution Order)
+
+# WEEK 1, DAY 3: Encapsulation
+class Database:
+    # Public, protected (_), private (__)
+    # Properties (@property)
+    # Getters and setters
+
+# WEEK 1, DAY 4: Polymorphism
+# Duck typing
+# Abstract base classes
+
+# WEEK 1, DAY 5: Design Patterns
+# Singleton, Factory, Strategy, Observer
