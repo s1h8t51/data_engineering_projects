@@ -182,3 +182,147 @@
 - Write actual code, not just read
 
 ---
+
+
+
+1. Data Cleaning & Transformation (Most Likely)
+
+In these problems, you are given raw "dirty" data and must use Python (not just Pandas) to clean it.
+
+Problem 1: The Sensor Log Parser
+
+Task: Given a list of strings representing logs: "2023-10-01 12:00:00, LOC_123, TEMP, 85.5", write a function to convert these into a list of dictionaries. Handle cases where the temperature might be missing or corrupted (e.g., "NULL" or "ERROR").
+
+Skill: String splitting, Type casting, Error handling (try-except).
+
+Problem 2: Grouping & Aggregation
+
+Task: Given a list of dictionaries (Locomotive ID and Fuel Consumed), return a dictionary where the key is the ID and the value is the total fuel consumed.
+
+Skill: Dictionary manipulation, .get() method, or defaultdict.
+
+2. Time-Series & Window Logic
+
+BNSF tracks trains over time. This is critical for predictive maintenance.
+
+Problem 3: Finding State Changes
+
+Task: You have a list of statuses for a train: ['Idle', 'Idle', 'Moving', 'Moving', 'Stopped', 'Moving']. Write a function to count how many times the train changed its status.
+
+Skill: List iteration, indexing (i vs i-1).
+
+Problem 4: Moving Average (Sliding Window)
+
+Task: Given a list of temperatures [70, 72, 75, 80, 82] and a window size K=3, return the moving average at each point.
+
+Skill: List slicing, sum()/len() logic, or collections.deque.
+
+3. String & Pattern Matching
+
+Useful for parsing GPS data or Equipment IDs.
+
+Problem 5: Validating Equipment IDs
+
+Task: BNSF equipment IDs must follow a pattern (e.g., 4 letters followed by 6 numbers: BNSF123456). Write a function to validate if a list of IDs is correct.
+
+Skill: Regular Expressions (import re), string methods like .isalpha() and .isdigit().
+
+4. "Pythonic" Efficiency (The "Proficiency" Test)
+
+The interviewer will watch how you write code, not just if it works.
+
+Problem 6: Flatten a Nested List
+
+Task: Convert [[1, 2], [3], [4, 5]] into [1, 2, 3, 4, 5].
+
+Skill: List comprehensions (the "Pythonic" way) vs. nested for-loops.
+
+Problem 7: Deduplication with Order Preservation
+
+Task: Remove duplicates from a list of Locomotive IDs while keeping the original order.
+
+Skill: Understanding that set() loses order; using dict.fromkeys() or a loop with a seen set.
+
+5. AI-Specific Logic (Mathematical Implementation)
+
+Problem 8: Euclidean Distance
+
+Task: Write a function to calculate the distance between two GPS points (x1, y1) and (x2, y2) without using external libraries.
+
+Skill: math library, understanding basic ML geometry.
+
+Problem 9: Precision and Recall Calculation
+
+Task: Given a list of actual labels and predicted labels (0 or 1), write functions to calculate the number of True Positives, False Positives, and the final Precision score.
+
+Skill: Comparison logic, handling division by zero.
+
+1. Data Integrity & Validation
+
+Problem 11: Schema Comparison
+
+Task: You have two dictionaries representing data schemas (field name and data type). Write a function to identify missing fields and data type mismatches between the "Incoming Data" and the "Target Table."
+
+Skill: Dictionary comparison, set operations (keys()), and conditional logic.
+
+Problem 12: Outlier Detection (Z-Score)
+
+Task: Given a list of sensor readings, calculate the mean and standard deviation. Identify any value that is more than 3 standard deviations away from the mean.
+
+Skill: math module, list comprehensions, and basic statistical implementation without libraries like NumPy.
+
+2. Efficient Data Processing
+
+Problem 13: Memory-Efficient File Reading (Generators)
+
+Task: You need to process a 50GB log file. Write a Python generator function that yields one line at a time only if the line contains the keyword "ERROR."
+
+Skill: yield keyword, file I/O, and memory management.
+
+Problem 14: Batching Data for API Inference
+
+Task: You have a list of 10,000 sensor records. Your AI model API can only handle batches of 100 records at a time. Write a function to split the list into a list of lists (batches).
+
+Skill: List slicing and range(start, stop, step).
+
+3. Time-Series & Sequence Logic
+
+Problem 15: Identifying "Gap" in Timestamps
+
+Task: Given a list of sorted timestamps (as strings), find if there is a gap of more than 10 minutes between any two consecutive readings.
+
+Skill: datetime module, timedelta calculations, and sequence iteration.
+
+Problem 16: Finding the Longest Consecutive "Running" State
+
+Task: A locomotive sends status updates: ['Idle', 'Moving', 'Moving', 'Moving', 'Idle', 'Moving']. Write a function to find the maximum number of consecutive 'Moving' statuses.
+
+Skill: Counter variables and tracking "max" across loops.
+
+4. System & Engineering Design (Pythonic)
+
+Problem 17: Retrying a Failed Model Request (Decorators)
+
+Task: Write a Python decorator called @retry that will attempt to run a function 3 times if it encounters an exception before finally failing.
+
+Skill: High-order functions, functools.wraps, and exception handling.
+
+Problem 18: Rate Limiter Logic
+
+Task: Write a function that accepts a timestamp and a history of previous request times. Return True if the user has made fewer than 5 requests in the last 60 seconds.
+
+Skill: time module and list filtering (queue logic).
+
+5. Advanced ML/Data Structures
+
+Problem 19: Transpose a Matrix (Sensor Data)
+
+Task: You receive sensor data in a "list of lists" format where each sub-list is a row. Convert it so each sub-list is a column (feature).
+
+Skill: Nested list comprehensions or zip(*matrix).
+
+Problem 20: Flattening Deeply Nested JSON
+
+Task: IoT devices often send nested JSON: {"locomotive": {"id": 1, "engine": {"temp": 90}}}. Write a recursive function to flatten this into: {"locomotive_id": 1, "locomotive_engine_temp": 90}.
+
+Skill: Recursion and dictionary updating.
