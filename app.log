@@ -1,0 +1,15 @@
+2026-02-20 18:11 - WARNING - Save me!
+2026-02-20 18:13 - DEBUG - name ='samara'
+2026-02-20 18:13 - WARNING - Save me!
+2026-02-20 18:15 - ERROR - donutcalculationerror
+Traceback (most recent call last):
+  File "/workspaces/data_engineering_projects/python_practice/python_projects/python_basics/logging_practice.py", line 57, in <module>
+    do_per_guests = donuts/guests
+                   ~~~~~~^~~~~~~
+ZeroDivisionError: division by zero
+2026-02-20 18:17 - ERROR - donutcalculationerror
+Traceback (most recent call last):
+  File "/workspaces/data_engineering_projects/python_practice/python_projects/python_basics/logging_practice.py", line 57, in <module>
+    do_per_guests = donuts/guests
+                   ~~~~~~^~~~~~~
+ZeroDivisionError: division by zero
