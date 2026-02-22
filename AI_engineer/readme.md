@@ -645,3 +645,46 @@ def engineer_features(data):
 **YOU'RE GOING TO CRUSH THIS!** 💪🚀
 
 Let me know if you need help with any specific concepts! 🎯
+
+
+ HOW TO USE THESE MOCK TESTS
+Daily Schedule:
+DAY 1 (FEB 22):
+
+Morning (9-11 AM): Mock Test 1A (70 min) + review (50 min)
+Afternoon (2-4 PM): Mock Test 1B (70 min) + review (50 min)
+
+DAY 2 (FEB 23):
+
+Morning (9-11 AM): Mock Test 2A (70 min) + review (50 min)
+Afternoon (2-4 PM): Mock Test 2B (70 min) + review (50 min)
+
+DAY 3 (FEB 24):
+
+Morning (9-11 AM): Mock Test 3A (70 min) + review (50 min)
+Afternoon (2-4 PM): Mock Test 3B (70 min) + review (50 min)
+
+Each session: 2 hours total (70 min test + 50 min review)
+
+✅ EVALUATION CRITERIA
+For each test, score yourself:
+Part 1: /30 points
+
+Correctness: /15
+Code quality: /10
+Efficiency: /5
+
+Part 2: /40 points
+
+Correctness: /20
+Feature engineering/logic: /15
+Code quality: /5
+
+Part 3: /30 points
+
+Correctness: /15
+Optimization: /10
+Edge cases: /5
+
+TOTAL: /100 points
+Passing: 70+ points ✅
