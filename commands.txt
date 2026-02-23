@@ -1,0 +1,9 @@
+git hub commands for sync
+---
+git add .
+git commit -m "somemessage"
+git push origin main 
+
+
+-- run beofore running a python file  
+source /workspaces/data_engineering_projects/.venv/bin/activate
