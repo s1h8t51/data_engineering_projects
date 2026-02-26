@@ -109,6 +109,32 @@ Example output:
 1  cargo_weight        0.187
 2  weather_Snow        0.156
 
+def train_delay_predictor(x,y):
+-- sklearn.modelselection import train_test_split
+--x_train,x_test,y_train,y_test= train_test_split(x,y,test_size =0.2)
+
+-- sklearn.linearmodel import Logisticregression ,RandomForest,XGBoost
+--sklearn.pipeline import pipeline
+data_pipeline_liner = pipeline([('scale':robustscalar),('model' :'linearregression')])
+data_pipeline = pipeline([('scale':robustscalar),('model' :'RandomForestClassifier(nestimator = 100,random_state =42)')])
+
+data_pipeline_liner.fit(x_train, y_train)
+data_pipeline.fit(x_train, y_train)
+def evaluate_classification(y_true, y_pred, model_name):
+    print(f"--- {model_name} Performance ---")
+    print(f"Accuracy:  {accuracy_score(y_true, y_pred):.4f}")
+    print(f"Precision: {precision_score(y_true, y_pred):.4f}")
+    print(f"Recall:    {recall_score(y_true, y_pred):.4f}")
+    print(f"F1 Score:  {f1_score(y_true, y_pred):.4f}")
+    print("\n")
+
+# Run the evaluation
+evaluate_classification(y_test, y_pred_log, "Logistic Regression")
+evaluate_classification(y_test, y_pred_rf, "Random Forest")
+
+# 4. Compare Predictions
+y_pred_lr = data_pipeline_liner.predict(x_test)
+y_pred_rf = data_pipeline.predict(x_test)
 
 PART 3 (25 minutes): Production Deployment
 -------------------------------------------

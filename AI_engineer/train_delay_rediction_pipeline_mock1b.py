@@ -43,121 +43,141 @@ df.loc[df.sample(frac=0.03).index, 'crew_experience_years'] = np.nan
 
 df.to_csv('train_delays.csv', index=False)
 
-'''
+import pandas as pd
+import numpy as np
 
----
+def prepare_data(df):
+    df = df.copy()
+    
+    # FIX 1: Use the correct column names from your simulation
+    for col in ['maintenance_score', 'crew_experience_years']:
+        df[col] = df[col].fillna(df[col].median())
+        
+    df['distance_per_ton'] = df['distance_miles'] / df['cargo_weight_tons']
+    
+    # Match the name 'locomotive_age_years' from your data dict
+    df['maintenance_per_age'] = df['maintenance_score'] / df['locomotive_age_years']
+    df['is_heavy_cargo'] = (df['cargo_weight_tons'] > 6000).astype(int)
+    df['is_old_locomotive'] = (df['locomotive_age_years'] > 15).astype(int)
+    
+    # FIX 2: Drop unique IDs and non-predictive strings before encoding
+    # These cannot be converted to floats/numbers for the model
+    df = df.drop(columns=['train_id', 'actual_duration_hours'], errors='ignore')
+    
+    # 3. Categorical Encoding (Handles route and weather)
+    df = pd.get_dummies(df, columns=['route', 'weather_condition'], drop_first=True)
+    
+    y = df['delayed']
+    X = df.drop(columns=['delayed'])
+    
+    return X, y, X.columns.tolist()
 
-### **PROBLEM STATEMENT:**
-```
-BNSF Railway - Delay Prediction System
-=======================================
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import RobustScaler
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
-Build a machine learning pipeline to predict train delays.
+def train_delay_predictor(X, y):
+    # 1. Stratified Split (Crucial for class imbalance)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, stratify=y, random_state=42
+    )
+    
+    # 2. Define Pipelines
+    models = {
+        'LogisticReg': LogisticRegression(max_iter=1000),
+        'RandomForest': RandomForestClassifier(n_estimators=100, random_state=42)
+    }
+    
+    comparison_list = []
+    trained_pipes = {}
+    
+    for name, model in models.items():
+        pipe = Pipeline([
+            ('scaler', RobustScaler()),
+            ('clf', model)
+        ])
+        
+        pipe.fit(X_train, y_train)
+        y_pred = pipe.predict(X_test)
+        
+        # 3. Calculate Metrics
+        metrics = {
+            'model_name': name,
+            'precision': precision_score(y_test, y_pred),
+            'recall': recall_score(y_test, y_pred),
+            'f1_score': f1_score(y_test, y_pred),
+            'accuracy': accuracy_score(y_test, y_pred)
+        }
+        comparison_list.append(metrics)
+        trained_pipes[name] = pipe
 
-INPUT: train_delays.csv (5,000 records)
+    # 4. Results Processing
+    comparison_df = pd.DataFrame(comparison_list)
+    best_model_name = comparison_df.sort_values(by='f1_score', ascending=False).iloc[0]['model_name']
+    best_pipe = trained_pipes[best_model_name]
+    
+    # Extract Feature Importances (From Random Forest specifically)
+    rf_model = trained_pipes['RandomForest'].named_steps['clf']
+    importances = pd.DataFrame({
+        'feature': X.columns,
+        'importance': rf_model.feature_importances_
+    }).sort_values(by='importance', ascending=False)
 
-PART 1 (15 minutes): Data Preparation
---------------------------------------
-Write a function: prepare_data(df)
+    return best_pipe, comparison_df, importances
 
-Requirements:
-1. Handle missing values:
-   - maintenance_score: fill with median
-   - crew_experience_years: fill with median
-   
-2. Encode categorical variables:
-   - route: one-hot encoding
-   - weather_condition: one-hot encoding
-   
-3. Create new features:
-   - distance_per_ton = distance / cargo_weight
-   - maintenance_per_age = maintenance_score / locomotive_age
-   - is_heavy_cargo = 1 if cargo_weight > 6000 else 0
-   - is_old_locomotive = 1 if age > 15 else 0
+def predict_delays_batch(new_data, model_pipeline):
+    if new_data.empty:
+        raise ValueError("Input data is empty")
 
-4. Return:
-   - X (features), y (target: delayed)
-   - Feature names list
+    # 1. & 2. Preprocessing is handled by the model_pipeline itself!
+    # (Assuming new_data has passed through the same prepare_data function)
+    
+    # 3. Predictions with Confidence Scores
+    # [:, 1] gets the probability of the "Delayed" class (1)
+    probabilities = model_pipeline.predict_proba(new_data)[:, 1]
+    predictions = model_pipeline.predict(new_data)
+    
+    # 4. Create Predictions DataFrame
+    results_df = pd.DataFrame({
+        'train_id': new_data.get('train_id', range(len(new_data))),
+        'predicted_delay': predictions,
+        'confidence': probabilities
+    })
+    
+    # Flag high-risk trains (confidence > 70%)
+    results_df['risk_level'] = np.where(results_df['confidence'] > 0.7, 'High Risk', 'Standard')
+    
+    # 5. Summary Statistics
+    summary = {
+        'total_trains': int(len(results_df)),
+        'predicted_delays': int(results_df['predicted_delay'].sum()),
+        'high_risk_count': int((results_df['risk_level'] == 'High Risk').sum()),
+        'avg_confidence': float(results_df['confidence'].mean())
+    }
+    
+    return results_df, summary
 
+X, y, feature_names = prepare_data(df)
 
-PART 2 (30 minutes): Model Training & Evaluation
--------------------------------------------------
-Write a function: train_delay_predictor(X, y)
+# 3. Train and Compare Models
+best_model, comparison_df, top_features = train_delay_predictor(X, y)
 
-Requirements:
-1. Split data: 80% train, 20% test (stratified)
+# --- PRINT OUTPUTS ---
+print("\n--- MODEL COMPARISON ---")
+print(comparison_df)
 
-2. Train THREE models:
-   - Logistic Regression
-   - Random Forest (100 trees)
-   - XGBoost (if you know it, otherwise skip)
+print("\n--- TOP 10 FEATURES ---")
+print(top_features)
 
-3. For each model, calculate:
-   - Precision
-   - Recall
-   - F1 Score
-   - Accuracy
+# 4. Production Test: Predict on 5 new trains
+new_data_sample = X.head(5) 
+predictions, summary = predict_delays_batch(new_data_sample, best_model)
 
-4. Return:
-   - Best model (highest F1 score)
-   - Comparison DataFrame with all metrics
-   - Feature importances (top 10)
+print("\n--- BATCH PREDICTION SUMMARY ---")
+print(summary)
 
-Example output:
->>> model, comparison, importances = train_delay_predictor(X, y)
->>> print(comparison)
-   model_name  precision  recall  f1_score  accuracy
-0  LogisticReg     0.72    0.68      0.70      0.73
-1  RandomForest    0.81    0.78      0.79      0.82
-
->>> print(importances.head())
-           feature  importance
-0  distance_miles      0.234
-1  cargo_weight        0.187
-2  weather_Snow        0.156
-
-
-PART 3 (25 minutes): Production Deployment
--------------------------------------------
-Write a function: predict_delays_batch(new_data, model)
-
-Requirements:
-1. Accept new train data (same format as training)
-2. Apply same preprocessing pipeline
-3. Make predictions with confidence scores
-4. Flag high-risk trains (confidence > 70% for delay)
-
-5. Return:
-   - Predictions DataFrame with:
-     'train_id', 'predicted_delay', 'confidence', 'risk_level'
-   - Summary statistics:
-     {
-       'total_trains': int,
-       'predicted_delays': int,
-       'high_risk_count': int,
-       'avg_confidence': float
-     }
-
-Example:
->>> predictions, summary = predict_delays_batch(new_df, model)
->>> print(summary)
-{
-  'total_trains': 100,
-  'predicted_delays': 23,
-  'high_risk_count': 8,
-  'avg_confidence': 0.76
-}
-
-
-CONSTRAINTS:
-- Must use sklearn
-- Handle edge cases (empty data, single class, etc.)
-- Code must be efficient (< 5 seconds for 5000 records)
-- Production-ready error handling
-
-EVALUATION:
-- Model performance: 40%
-- Code correctness: 35%
-- Feature engineering: 25%
-
-'''
+print("\n--- DETAILED PREDICTIONS ---")
+print(predictions)
