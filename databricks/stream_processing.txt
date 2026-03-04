@@ -1,0 +1,85 @@
+-- For streaming we use:
+-- fro csv files 
+df = spark.readStream \
+    .format("csv") \
+    .option("header", "true") \
+    .schema(train_schema) \
+    .load("abfss://container/incoming/")
+
+-- deltalake _autoloader 
+
+df = spark.readStream.format("cloudFiles") \
+    .option("cloudFiles.format", "csv") \
+    .option("header", "true") \
+    .option("mergeSchema", "true")  # <-- allows new columns to be added
+    .schema(train_schema)           # existing columns remain enforced
+    .load("/mnt/incoming/")
+
+---- Using Unity Catalog SQL -- Users without permission cannot access this column
+-- How ABAC Works in Pipelines
+
+In your Silver or Gold layer, any transformations preserve tags
+Downstream users only see non-sensitive columns unless authorized
+Integrates seamlessly with MERGE INTO or streaming pipelines
+
+ALTER TABLE train_bronze
+ALTER COLUMN ssn
+SET TAG databricks:sensitivity = 'PII';
+
+spark.readStream
+1️⃣ Kafka Topic
+
+From Apache Kafka:
+
+df = spark.readStream.format("kafka") \
+    .option("kafka.bootstrap.servers", "host:9092") \
+    .option("subscribe", "topic_name") \
+    .load()
+2️⃣ Event Stream (Cloud Managed Kafka)
+
+Azure Event Hubs example:
+
+df = spark.readStream.format("eventhubs") \
+    .options(**event_hub_config) \
+    .load()
+3️⃣ IoT Sensor Data
+
+Usually via:
+
+Kafka
+MQTT
+Event Hubs
+Kinesis
+
+Spark reads from those connectors.
+
+4️⃣ Live Application Logs
+
+Example (monitor folder continuously):
+
+df = spark.readStream \
+    .format("json") \
+    .load("/logs/incoming/")
+
+Spark keeps watching folder for new files.
+
+🔥 How Does It “Continue to Follow”?
+
+Streaming uses:
+
+Micro-batching
+Checkpointing
+Offset tracking
+
+Example:
+
+query = df.writeStream \
+    .format("delta") \
+    .option("checkpointLocation", "/mnt/checkpoints/") \
+    .start("/mnt/output/")
+
+Checkpoint ensures:
+
+No data loss
+Exactly-once processing
+Resume after failure

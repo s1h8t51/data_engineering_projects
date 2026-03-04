@@ -55,8 +55,6 @@ def clean_sensor_data(df):
    # vibration 0 to 15
    df_clean = df_clean[(df_clean.vibration >= 0) & (df_clean.vibration <= 15)]
    df_clean = df_clean.sort_values(["train_id","timestamp"])
-   
-
    final_row_count = len(df_clean)
    rows_dropped = initial_row_count  - final_row_count
    # quality score claculation    

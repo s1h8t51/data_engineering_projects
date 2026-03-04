@@ -48,14 +48,10 @@ import numpy as np
 
 def prepare_data(df):
     df = df.copy()
-    
-    # FIX 1: Use the correct column names from your simulation
     for col in ['maintenance_score', 'crew_experience_years']:
         df[col] = df[col].fillna(df[col].median())
         
     df['distance_per_ton'] = df['distance_miles'] / df['cargo_weight_tons']
-    
-    # Match the name 'locomotive_age_years' from your data dict
     df['maintenance_per_age'] = df['maintenance_score'] / df['locomotive_age_years']
     df['is_heavy_cargo'] = (df['cargo_weight_tons'] > 6000).astype(int)
     df['is_old_locomotive'] = (df['locomotive_age_years'] > 15).astype(int)

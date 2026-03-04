@@ -1,0 +1,72 @@
+-- PART 2 — Common Batch Sources + Syntax
+-- CSV Files (Blob / ADLS / Local)
+Batch Source (most common)
+Historical datasets
+Daily file drops
+One-time backfills
+Scheduled ingestion
+df = spark.read.csv("abfss://container/path/*.csv", header=True)
+
+-- quarentine implementation 
+raw_df = spark.read \
+    .format("csv") \
+    .option("header", "true") \
+    .option("mode", "PERMISSIVE") \
+    .load("path")
+valid_df = raw_df.filter("delay_minutes >= 0")
+invalid_df = raw_df.filter("delay_minutes < 0 OR delay_minutes IS NULL")
+valid_df.write.format("delta").mode("append").save("/mnt/bronze/train_valid")
+invalid_df.write.format("delta").mode("append").save("/mnt/quarantine/train_invalid")
+
+
+Example:
+Example (Azure Blob in Databricks):
+
+df = spark.read.format("csv") \
+    .option("header", "true") \
+    .load("abfss://container@storageaccount.dfs.core.windows.net/data/")
+
+--  Parquet File (S3)
+df = spark.read.parquet("s3://bucket/path/")
+
+Parquet is preferred in production (columnar + optimized).
+
+-- Table in Database (JDBC)
+df = spark.read.format("jdbc") \
+    .option("url", "jdbc:postgresql://host:5432/db") \
+    .option("dbtable", "schema.table_name") \
+    .option("user", "username") \
+    .option("password", "password") \
+    .load()
+
+Spark connects via JDBC driver.
+
+--  Historical Dataset (Data Lake)
+
+Same syntax — usually Parquet or Delta:
+
+df = spark.read.format("delta").load("/mnt/datalake/historical/")
+
+JSON
+
+ORC
+
+Avro
+
+Hive tables
+
+Snowflake
+
+BigQuery
+
+REST APIs (custom ingestion)
+
+FTP/SFTP
+
+Google Cloud Storage
+
+HDFS
+
+MongoDB
+
+Cassandra
